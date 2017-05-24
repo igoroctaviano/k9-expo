@@ -1,9 +1,12 @@
 /* Dependencies */
 import Expo from 'expo';
 import React, { Component } from 'react';
+import { StackNavigator } from 'react-navigation';
 
 /* Components */
-import Signup from './src/pages/signup/Signup';
+import Signin from './src/components/pages/signin/Signin';
+import Signup from './src/components/pages/signup/Signup';
+import Account from './src/components/pages/account/Account';
 
 class App extends Component {
   constructor(props) {
@@ -13,9 +16,25 @@ class App extends Component {
   }
 
   render() {
-    if (this.state.isReady) { return <Signup />; }
+    if (this.state.isReady) { return <Signin navigation={this.props.navigation} />; }
     return <Expo.AppLoading />;
   }
 }
 
-Expo.registerRootComponent(App);
+/* Navigator Routes */
+const routes = {
+  Signin: { screen: Signin },
+  Signup: { screen: Signup },
+  Account: { screen: Account },
+};
+const AppNavigator = StackNavigator({
+    ...routes,
+    Index: {
+      screen: App,
+    },
+  },
+  {
+    initialRouteName: 'Index',
+  });
+
+Expo.registerRootComponent(AppNavigator);

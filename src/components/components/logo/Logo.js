@@ -12,9 +12,9 @@ export default function() {
       paddingBottom: 5 }}>
       <Image
         style={{ width: 200, height: 200 }}
-        source={require('../../../imgs/german-shepard.jpg')}/>
-      <Text style={{ fontSize: 40, fontWeight: 'bold' }}>K9</Text>
-      <Text style={{ fontSize: 20 }}>Uma ONG boa pra cachorro!</Text>
+        source={require('../../../../assets/imgs/german-shepard.jpg')}/>
+      <Text style={{ fontSize: 50, fontWeight: 'bold' }}>K9</Text>
+      <Text style={{ fontSize: 25 }}>Uma ONG boa pra cachorro!</Text>
     </View>
   );
 }

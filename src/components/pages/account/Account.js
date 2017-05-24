@@ -9,6 +9,10 @@ export default class Account extends Component {
     this.state = { isReady: false }
   }
 
+  static navigationOptions = {
+    title: 'Bem-vindo',
+  };
+
   close() {
 
   }
