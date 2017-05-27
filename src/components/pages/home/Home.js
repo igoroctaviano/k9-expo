@@ -5,6 +5,7 @@ import { View, Button, Text, TextInput } from 'react-native';
 
 /* Database */
 import Database from "../../../database/Database";
+import Wrapper from '../../components/wrapper/Wrapper';
 
 export default class Home extends Component {
   constructor(props) {
@@ -58,38 +59,31 @@ export default class Home extends Component {
 
   render() {
     return (
-      <View style={{
-        flex: 1,
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#BABAC2' }}>
-        <View style={{ width: '90%', height: '90%' }}>
-          <View style={{
-            flex: 1,
-            flexDirection: 'column',
-            justifyContent: 'space-between'}}>
-            <Text style={{ fontSize: 20 }}>Olá, Seu ID é: {this.state.uid}</Text>
-            <Text style={{ fontSize: 20 }}>Telefone: {this.state.mobile}</Text>
-            <TextInput
-              onChangeText={(mobileForm) => this.setState({mobileForm})}
-              value={this.state.mobileForm} />
-            <Button
-              onPress={this.saveMobile}
-              title="Atualizar Telefone"
-              color="#841584"
-              accessibilityLabel="Clique aqui para atualizar o telefone." />
-            <Button
-              onPress={this.logout}
-              title="Sair"
-              color="#841584"
-              accessibilityLabel="Clique aqui para sair." />
-            <View>
-              <Text style={{ color: 'red', fontWeight: 'bold' }}>{this.state.response}</Text>
-            </View>
+      <Wrapper>
+        <View style={{
+          flex: 1,
+          flexDirection: 'column',
+          justifyContent: 'space-between'}}>
+          <Text style={{ fontSize: 20 }}>Olá, Seu ID é: {this.state.uid}</Text>
+          <Text style={{ fontSize: 20 }}>Telefone: {this.state.mobile}</Text>
+          <TextInput
+            onChangeText={(mobileForm) => this.setState({mobileForm})}
+            value={this.state.mobileForm} />
+          <Button
+            onPress={this.saveMobile}
+            title="Atualizar Telefone"
+            color="#841584"
+            accessibilityLabel="Clique aqui para atualizar o telefone." />
+          <Button
+            onPress={this.logout}
+            title="Sair"
+            color="#841584"
+            accessibilityLabel="Clique aqui para sair." />
+          <View>
+            <Text style={{ color: 'red', fontWeight: 'bold' }}>{this.state.response}</Text>
           </View>
         </View>
-      </View>
+      </Wrapper>
     );
   }
 }
