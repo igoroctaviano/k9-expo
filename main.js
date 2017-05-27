@@ -1,16 +1,22 @@
 /* Dependencies */
 import Expo from 'expo';
+import * as firebase from "firebase";
 import React, { Component } from 'react';
 import { StackNavigator } from 'react-navigation';
 
 /* Components */
 import Signin from './src/components/pages/signin/Signin';
 import Signup from './src/components/pages/signup/Signup';
-import Account from './src/components/pages/account/Account';
+import Home from './src/components/pages/home/Home';
+
+/* Database */
+import Firebase from "./src/database/Firebase";
 
 class App extends Component {
   constructor(props) {
     super(props);
+
+    Firebase.initialise();
 
     this.state = { isReady: 'true' };
   }
@@ -25,16 +31,8 @@ class App extends Component {
 const routes = {
   Signin: { screen: Signin },
   Signup: { screen: Signup },
-  Account: { screen: Account },
+  Home: { screen: Home },
 };
-const AppNavigator = StackNavigator({
-    ...routes,
-    Index: {
-      screen: App,
-    },
-  },
-  {
-    initialRouteName: 'Index',
-  });
+const AppNavigator = StackNavigator({ ...routes, Index: { screen: App } }, { initialRouteName: 'Index' });
 
 Expo.registerRootComponent(AppNavigator);

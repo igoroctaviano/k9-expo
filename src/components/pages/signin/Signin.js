@@ -1,12 +1,12 @@
 /* Dependencies */
-import Firebase from 'firebase';
+import * as firebase from "firebase";
 import React, { Component } from 'react';
-import { View, TextInput, Button, Image, AsyncStorage } from 'react-native';
+import { View, TextInput, Button, Text } from 'react-native';
 
 /* Components */
 import Logo from '../../components/logo/Logo';
 
-export default class Login extends Component {
+export default class Signin extends Component {
   constructor(props) {
     super(props);
 
@@ -14,22 +14,22 @@ export default class Login extends Component {
       email: '',
       password: '',
       isReady: false,
+      response: '',
     };
+
+    this.signin = this.signin.bind(this);
   }
 
-  static navigationOptions = {
-    title: 'Entrar',
-  };
+  static navigationOptions = { title: 'Entrar' };
 
-  signin() {
-    this.setState({ isReady: false });
+  async signin() {
+    const { navigate } = this.props.navigation;
 
-    Firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.password)
-    .then(user_data => {
-      this.setState({ isReady: true });
-
-      AsyncStorage.setItem('user_data', JSON.stringify(user_data));
-    }).catch(error => alert('A tentativa de Login falhou. Por favor, tente novamente.'));
+    try {
+      await firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.password);
+      this.setState({ response: "Bem-vindo!" });
+      setTimeout(() => navigate('Home'), 1500);
+    } catch (error) { this.setState({ response: error.toString() }); }
   }
 
   render() {
@@ -52,14 +52,14 @@ export default class Login extends Component {
               style={{ fontSize: 20 }}
               placeholder="Email"
               placeholderTextColor="grey"
-              value={this.state.email} />
+              onChangeText={(email) => this.setState({email})} />
             <TextInput
               style={{ fontSize: 20 }}
               placeholder="Senha"
               placeholderTextColor="grey"
-              value={this.state.password} />
+              onChangeText={(password) => this.setState({password})} />
             <Button
-              onPress={this.signin.bind(this)}
+              onPress={this.signin}
               title="Entrar"
               color="#841584"
               accessibilityLabel="Clique aqui para efetuar o login." />
@@ -68,6 +68,9 @@ export default class Login extends Component {
               title="Cadastrar"
               color="#841584"
               accessibilityLabel="Ainda não possui conta? Clique aqui para fazer seu cadastro." />
+            <View>
+              <Text style={{ color: 'red', fontWeight: 'bold' }}>{this.state.response}</Text>
+            </View>
           </View>
         </View>
       </View>
