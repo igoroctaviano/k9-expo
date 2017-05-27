@@ -32,6 +32,8 @@ export default class Signin extends Component {
     } catch (error) { this.setState({ response: error.toString() }); }
   }
 
+  constaosiej () {}
+
   render() {
     const { navigate } = this.props.navigation;
 
