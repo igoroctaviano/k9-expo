@@ -5,6 +5,7 @@ import { View, TextInput, Button, Text } from 'react-native';
 
 /* Components */
 import Logo from '../../components/logo/Logo';
+import RedBox from '../../components/redbox/RedBox';
 
 export default class Signin extends Component {
   constructor(props) {
@@ -31,8 +32,6 @@ export default class Signin extends Component {
       setTimeout(() => navigate('Home'), 1500);
     } catch (error) { this.setState({ response: error.toString() }); }
   }
-
-  constaosiej () {}
 
   render() {
     const { navigate } = this.props.navigation;
@@ -70,9 +69,7 @@ export default class Signin extends Component {
               title="Cadastrar"
               color="#841584"
               accessibilityLabel="Ainda não possui conta? Clique aqui para fazer seu cadastro." />
-            <View>
-              <Text style={{ color: 'red', fontWeight: 'bold' }}>{this.state.response}</Text>
-            </View>
+            <RedBox message={this.state.response} />
           </View>
         </View>
       </View>

@@ -4,7 +4,8 @@ import React, { Component } from 'react';
 import { View, Button, TextInput, Text } from 'react-native';
 
 /* Components */
-import Logo from '../../components/logo/Logo'; //
+import Logo from '../../components/logo/Logo';
+import RedBox from '../../components/redbox/RedBox';
 
 export default class Signup extends Component {
   constructor(props) {
@@ -73,9 +74,7 @@ export default class Signup extends Component {
               title="Entrar"
               color="#841584"
               accessibilityLabel="Clique aqui para efetuar o login." />
-            <View>
-              <Text style={{ color: 'red', fontWeight: 'bold' }}>{this.state.response}</Text>
-            </View>
+            <RedBox message={this.state.response} />
           </View>
         </View>
       </View>
