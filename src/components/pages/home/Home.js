@@ -23,6 +23,7 @@ export default class Home extends Component {
 
     this.logout = this.logout.bind(this);
     this.updateData = this.updateData.bind(this);
+    this.dogsList = this.dogsList.bind(this);
   }
 
   static navigationOptions = { title: 'Bem-vindo ' /* + this.props.user.name */ };
@@ -54,6 +55,12 @@ export default class Home extends Component {
     });
   }
 
+  dogsList() {
+    const { navigate } = this.props.navigation;
+
+    navigate('DogsList');
+  }
+
   async logout() {
     const { navigate } = this.props.navigation;
 
@@ -79,6 +86,11 @@ export default class Home extends Component {
             title="Atualizar"
             color="#841584"
             accessibilityLabel="Clique aqui para atualizar os dados." />
+          <Button
+            onPress={this.dogsList}
+            title="Cachorros"
+            color="#841584"
+            accessibilityLabel="Clique aqui para exibir lista de cachorros." />
           <Button
             onPress={this.logout}
             title="Sair"

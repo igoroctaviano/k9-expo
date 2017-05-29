@@ -9,6 +9,8 @@ import Signin from './src/components/pages/signin/Signin';
 import Signup from './src/components/pages/signup/Signup';
 import Home from './src/components/pages/home/Home';
 import Edit from './src/components/pages/home/Edit';
+import DogEdit from './src/components/pages/dog/DogEdit';
+import DogsList from './src/components/pages/dog/DogsList';
 
 /* Database */
 import Firebase from "./src/database/Firebase";
@@ -33,7 +35,9 @@ const routes = {
   Signin: { screen: Signin },
   Signup: { screen: Signup },
   Home: { screen: Home },
-  Edit: { screen: Edit }
+  Edit: { screen: Edit },
+  DogEdit: { screen: DogEdit },
+  DogsList: { screen: DogsList }
 };
 const AppNavigator = StackNavigator(
     { ...routes, Index: { screen: Signin } },

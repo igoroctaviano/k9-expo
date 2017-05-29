@@ -38,19 +38,19 @@ export default class Database {
     let userDogsPath = "/user/" + userId + "/dogs";
 
     firebase.database().ref(userDogsPath).on('value', snapshot => {
-      let details;
+      let dogs;
 
       // Details changed on Database?
-      if (snapshot.val()) { details = snapshot.val().push(); }
+      if (snapshot.val()) { dogs = snapshot.val(); }
 
       // setState!
-      callback(details);
+      callback(dogs);
     });
   }
 
   // Dog
   static setDogDetails(dogId, name, breed, age) {
-    let dogDetailsPath = "/user/" + dogId + "/details";
+    let dogDetailsPath = "/dog/" + dogId + "/details";
 
     firebase.database().ref(dogDetailsPath).set({
       name: name,
@@ -62,7 +62,7 @@ export default class Database {
   }
 
   static listenDogDetails(dogId, callback) {
-    let dogDetailsPath = "/user/" + dogId + "/details";
+    let dogDetailsPath = "/dog/" + dogId + "/details";
 
     firebase.database().ref(dogDetailsPath).on('value', snapshot => {
       let details;
