@@ -6,6 +6,7 @@ import { View, Button, Text, TextInput } from 'react-native';
 /* Database */
 import Database from "../../../database/Database";
 import Wrapper from '../../components/wrapper/Wrapper';
+import RedBox from '../../components/redbox/RedBox';
 
 export default class Home extends Component {
   constructor(props) {
@@ -13,13 +14,15 @@ export default class Home extends Component {
 
     this.state = {
       uid: '',
-      mobile: "",
+      name: this.props.name ? this.props.name : '',
+      mobile: this.props.mobile ? this.props.mobile : '',
+      address: this.props.address ? this.props.address : '',
       isReady: false,
       response: '',
     };
 
     this.logout = this.logout.bind(this);
-    this.saveMobile = this.saveMobile.bind(this);
+    this.updateData = this.updateData.bind(this);
   }
 
   static navigationOptions = { title: 'Bem-vindo ' /* + this.props.user.name */ };
@@ -29,23 +32,26 @@ export default class Home extends Component {
       // Get User Credentials
       let user = await firebase.auth().currentUser;
 
-      // Listen for Mobile Changes
-      Database.listenUserMobile(user.uid, (mobileNumber) => {
+      // Listen for Details Changes
+      Database.listenUserDetails(user.uid, details => {
         this.setState({
-          mobile: mobileNumber,
-          mobileForm: mobileNumber,
-        });
+          name: details.name,
+          mobile: details.mobile,
+          address: details.address });
       });
 
       this.setState({ uid: user.uid });
-    } catch (error) { alert(error); }
+    } catch (error) { this.setState({ response: error.toString() }); }
   }
 
-  saveMobile() {
-    // Set Mobile
-    if (this.state.uid && this.state.mobileForm) {
-      Database.setUserMobile(this.state.uid, this.state.mobileForm);
-    }
+  updateData() {
+    const { navigate } = this.props.navigation;
+
+    navigate('Edit', {
+      name: this.state.name,
+      mobile: this.state.mobile,
+      address: this.state.address
+    });
   }
 
   async logout() {
@@ -53,8 +59,8 @@ export default class Home extends Component {
 
     try {
       await firebase.auth().signOut();
-      navigate('Home');
-    } catch (error) { alert(error); }
+      navigate('Signin');
+    } catch (error) { this.setState({ response: error.toString() }); }
   }
 
   render() {
@@ -64,24 +70,21 @@ export default class Home extends Component {
           flex: 1,
           flexDirection: 'column',
           justifyContent: 'space-between'}}>
-          <Text style={{ fontSize: 20 }}>Olá, Seu ID é: {this.state.uid}</Text>
+          <Text style={{ fontSize: 20 }}>Olá, O Seu ID é: {this.state.uid}</Text>
+          <Text style={{ fontSize: 20 }}>Instituição: {this.state.name}</Text>
+          <Text style={{ fontSize: 20 }}>Endereço: {this.state.address}</Text>
           <Text style={{ fontSize: 20 }}>Telefone: {this.state.mobile}</Text>
-          <TextInput
-            onChangeText={(mobileForm) => this.setState({mobileForm})}
-            value={this.state.mobileForm} />
           <Button
-            onPress={this.saveMobile}
-            title="Atualizar Telefone"
+            onPress={this.updateData}
+            title="Atualizar"
             color="#841584"
-            accessibilityLabel="Clique aqui para atualizar o telefone." />
+            accessibilityLabel="Clique aqui para atualizar os dados." />
           <Button
             onPress={this.logout}
             title="Sair"
             color="#841584"
             accessibilityLabel="Clique aqui para sair." />
-          <View>
-            <Text style={{ color: 'red', fontWeight: 'bold' }}>{this.state.response}</Text>
-          </View>
+          <RedBox message={this.state.response} />
         </View>
       </Wrapper>
     );

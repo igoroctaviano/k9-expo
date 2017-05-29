@@ -1,7 +1,9 @@
 {
   "user": {
     "details": {
-      "mobile": ""
+      "name": "",
+      "mobile": "",
+      "address": ""
     }
   }
 }

@@ -1,22 +1,78 @@
 /* Dependencies */
 import * as firebase from "firebase";
 
-class Database {
-  static setUserMobile(userId, mobile) {
-    let userMobilePath = "/user/" + userId + "/details";
+export default class Database {
+  // Mobile
+  static setUserDetails(userId, name, mobile, address) {
+    let userDetailsPath = "/user/" + userId + "/details";
 
-    return firebase.database().ref(userMobilePath).set({ mobile: mobile });
+    firebase.database().ref(userDetailsPath).set({
+      name: name,
+      mobile: mobile,
+      address: address
+    });
   }
 
-  static listenUserMobile(userId, callback) {
-    let userMobilePath = "/user/" + userId + "/details";
+  static listenUserDetails(userId, callback) {
+    let userDetailsPath = "/user/" + userId + "/details";
 
-    firebase.database().ref(userMobilePath).on('value', snapshot => {
-      let mobile = "";
-      if (snapshot.val()) { mobile = snapshot.val().mobile; }
-      callback(mobile);
+    firebase.database().ref(userDetailsPath).on('value', snapshot => {
+      let details;
+
+      // Details changed on Database?
+      if (snapshot.val()) { details = snapshot.val(); }
+
+      // setState!
+      callback(details);
+    });
+  }
+
+  // User Dog
+  static setUserDogs(userId, dogId) {
+    let userDogsPath = "/user/" + userId + "/dogs";
+
+    firebase.database().ref(userDogsPath).push({ id: dogId });
+  }
+
+  static listenUserDogs(userId, callback) {
+    let userDogsPath = "/user/" + userId + "/dogs";
+
+    firebase.database().ref(userDogsPath).on('value', snapshot => {
+      let details;
+
+      // Details changed on Database?
+      if (snapshot.val()) { details = snapshot.val().push(); }
+
+      // setState!
+      callback(details);
+    });
+  }
+
+  // Dog
+  static setDogDetails(dogId, name, breed, age) {
+    let dogDetailsPath = "/user/" + dogId + "/details";
+
+    firebase.database().ref(dogDetailsPath).set({
+      name: name,
+      breed: breed,
+      age: age
+    }).then(data => {
+       alert(data);
+    });
+  }
+
+  static listenDogDetails(dogId, callback) {
+    let dogDetailsPath = "/user/" + dogId + "/details";
+
+    firebase.database().ref(dogDetailsPath).on('value', snapshot => {
+      let details;
+
+      // Details changed on Database?
+      if (snapshot.val()) { details = snapshot.val(); }
+
+      // setState!
+      callback(details);
     });
   }
 }
 
-module.exports = Database;

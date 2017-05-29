@@ -1,7 +1,7 @@
 /* Dependencies */
 import * as firebase from "firebase";
 import React, { Component } from 'react';
-import { View, Button, TextInput, Text } from 'react-native';
+import { View, Button, TextInput } from 'react-native';
 
 /* Components */
 import Logo from '../../components/logo/Logo';
@@ -13,10 +13,11 @@ export default class Signup extends Component {
     super(props);
 
     this.state = {
-      email: '',
+      email: this.props.email ? this.props.email : '',
       password: '',
       name: '',
       mobile: '',
+      address: '',
       isReady: true,
       response: '',
     };
@@ -31,8 +32,13 @@ export default class Signup extends Component {
 
     try {
       await firebase.auth().createUserWithEmailAndPassword(this.state.email, this.state.password);
-      this.setState({ response: "Cadastro efetuado com sucesso!" });
-      setTimeout(() => navigate('Home'), 1500);
+      alert("Cadastro efetuado com sucesso!");
+      setTimeout(() =>
+        navigate('Home', {
+          name: this.state.name,
+          mobile: this.state.mobile,
+          address: this.state.address
+        }), 1500);
     } catch (error) { this.setState({ response: error.toString() }); }
   }
 
@@ -56,7 +62,7 @@ export default class Signup extends Component {
             onChangeText={(password) => this.setState({password})} />
           <TextInput
             style={{ fontSize: 20 }}
-            placeholder="Nome"
+            placeholder="Instituição"
             placeholderTextColor="grey"
             onChangeText={(name) => this.setState({name})} />
           <TextInput

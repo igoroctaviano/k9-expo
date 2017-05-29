@@ -1,7 +1,7 @@
 /* Dependencies */
 import * as firebase from "firebase";
 import React, { Component } from 'react';
-import { View, TextInput, Button, Text } from 'react-native';
+import { View, TextInput, Button } from 'react-native';
 
 /* Components */
 import Logo from '../../components/logo/Logo';
@@ -22,14 +22,12 @@ export default class Signin extends Component {
     this.signin = this.signin.bind(this);
   }
 
-  static navigationOptions = { title: 'Entrar' };
-
   async signin() {
     const { navigate } = this.props.navigation;
 
     try {
       await firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.password);
-      this.setState({ response: "Bem-vindo!" });
+      alert("Bem-vindo!");
       setTimeout(() => navigate('Home'), 1500);
     } catch (error) { this.setState({ response: error.toString() }); }
   }
