@@ -1,4 +1,5 @@
 /* Dependencies */
+import Expo from 'expo';
 import * as firebase from "firebase";
 import React, { Component } from 'react';
 import { View, Button, Text, TextInput } from 'react-native';
@@ -72,33 +73,35 @@ export default class Home extends Component {
 
   render() {
     return (
-      <Wrapper>
-        <View style={{
-          flex: 1,
-          flexDirection: 'column',
-          justifyContent: 'space-between'}}>
-          <Text style={{ fontSize: 20 }}>Olá, O Seu ID é: {this.state.uid}</Text>
-          <Text style={{ fontSize: 20 }}>Instituição: {this.state.name}</Text>
-          <Text style={{ fontSize: 20 }}>Endereço: {this.state.address}</Text>
-          <Text style={{ fontSize: 20 }}>Telefone: {this.state.mobile}</Text>
-          <Button
-            onPress={this.updateData}
-            title="Atualizar"
-            color="#841584"
-            accessibilityLabel="Clique aqui para atualizar os dados." />
-          <Button
-            onPress={this.dogsList}
-            title="Cachorros"
-            color="#841584"
-            accessibilityLabel="Clique aqui para exibir lista de cachorros." />
-          <Button
-            onPress={this.logout}
-            title="Sair"
-            color="#841584"
-            accessibilityLabel="Clique aqui para sair." />
-          <RedBox message={this.state.response} />
-        </View>
-      </Wrapper>
+        <Wrapper>
+          { this.state.name ?
+            <View style={{
+              flex: 1,
+              flexDirection: 'column',
+              justifyContent: 'space-between'}}>
+              <Text style={{ fontSize: 20 }}>Olá {this.state.name}!</Text>
+              <Text style={{ fontSize: 20 }}>Instituição: {this.state.name}</Text>
+              <Text style={{ fontSize: 20 }}>Endereço: {this.state.address}</Text>
+              <Text style={{ fontSize: 20 }}>Telefone: {this.state.mobile}</Text>
+              <Button
+                onPress={this.updateData}
+                title="Atualizar"
+                color="#841584"
+                accessibilityLabel="Clique aqui para atualizar os dados." />
+              <Button
+                onPress={this.dogsList}
+                title="Cachorros"
+                color="#841584"
+                accessibilityLabel="Clique aqui para exibir lista de cachorros." />
+              <Button
+                onPress={this.logout}
+                title="Sair"
+                color="#841584"
+                accessibilityLabel="Clique aqui para sair." />
+              <RedBox message={this.state.response} />
+            </View>
+          : <Expo.AppLoading /> }
+        </Wrapper>
     );
   }
 }
