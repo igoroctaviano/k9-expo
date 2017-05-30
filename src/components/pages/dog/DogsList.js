@@ -19,11 +19,8 @@ export default class DogEdit extends Component {
       response: '',
     };
 
-    this.editDog = this.editDog.bind(this);
     this.saveDog = this.saveDog.bind(this);
   }
-
-
 
   static navigationOptions = { title: 'Cachorros cadastrados' };
 
@@ -37,11 +34,6 @@ export default class DogEdit extends Component {
 
       this.setState({ uid: user.uid });
     } catch (error) { this.setState({ response: error.toString() }); }
-  }
-
-  editDog(id) {
-    const { navigate } = this.props.navigation;
-    navigate('DogEdit', { id: id });
   }
 
   saveDog() {
@@ -59,8 +51,6 @@ export default class DogEdit extends Component {
     const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
     const dogs = this.state.dogs ? ds.cloneWithRows(this.state.dogs) : null;
 
-    console.log('STATE', this.state.dogs.length);
-    console.log('LISTEN', this.state.dogs);
     return (
       <Wrapper>
         { this.state.dogs.length > 0 ?
@@ -71,8 +61,7 @@ export default class DogEdit extends Component {
               <DogItem
                 name={dog.details.name}
                 breed={dog.details.breed}
-                age={dog.details.age}
-                action={this.editDog(dog.details.uid)} />} />
+                age={dog.details.age} />} />
           : <Text style={{ fontSize: 20 }}>Ainda não há nenhum cachorro cadastrado.</Text> }
         <View style={{ marginTop: 15 }}>
           <Text>Novo cachorro</Text>
@@ -109,13 +98,11 @@ export default class DogEdit extends Component {
 function DogItem(props) {
 
   return (
-    <TouchableHighlight
-      onPress={() => props.action}
-      style={{
-        flex: 1,
-        padding: 12,
-        flexDirection: 'row',
-        alignItems: 'center' }}>
+    <TouchableHighlight style={{
+      flex: 1,
+      padding: 12,
+      flexDirection: 'row',
+      alignItems: 'center' }}>
       <View>
         <Image
           style={{ height: 40, width: 40, borderRadius: 20 }}
