@@ -14,12 +14,12 @@ export default class Edit extends Component {
 
     this.state = {
       uid: '',
-      name: this.props.name ? this.props.name : '',
-      nameForm: this.props.name ? this.props.name : '',
-      mobile: this.props.mobile ? this.props.mobile : '',
-      mobileForm: this.props.mobile ? this.props.mobile : '',
-      address: this.props.address ? this.props.address : '',
-      addressForm: this.props.address ? this.props.address : '',
+      name: '',
+      nameForm: '',
+      mobile: '',
+      mobileForm: '',
+      address: '',
+      addressForm: '',
       isReady: false,
       response: '',
     };
@@ -52,7 +52,12 @@ export default class Edit extends Component {
 
   saveData() {
     if (this.state.uid && this.state.nameForm && this.state.mobileForm && this.state.addressForm) {
-      Database.setUserDetails(this.state.uid, this.state.nameForm, this.state.mobileForm, this.state.addressForm);
+      Database.setUserDetails(
+        this.state.uid,
+        this.state.nameForm,
+        this.state.mobileForm,
+        this.state.addressForm, () => alert('Dados atualizados com sucesso!')
+      );
     } else { this.setState({ response: 'Por favor, preencha todos os campos.' }); }
   }
 

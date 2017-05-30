@@ -48,17 +48,11 @@ export default class Home extends Component {
 
   updateData() {
     const { navigate } = this.props.navigation;
-
-    navigate('Edit', {
-      name: this.state.name,
-      mobile: this.state.mobile,
-      address: this.state.address
-    });
+    navigate('Edit');
   }
 
   dogsList() {
     const { navigate } = this.props.navigation;
-
     navigate('DogsList');
   }
 

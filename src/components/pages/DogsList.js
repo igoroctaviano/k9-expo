@@ -65,15 +65,16 @@ export default class DogEdit extends Component {
       <Wrapper>
         { this.state.dogs.length > 0 ?
           <ListView
+            contentContainerStyle={{ flex: 1 }}
             initialListSize={4}
-            dataSource={dogs}
+            dataSource={ds}
             renderRow={dog =>
               <DogItem
                 name={dog.details.name}
                 breed={dog.details.breed}
                 age={dog.details.age}
                 action={this.editDog(dog.details.uid)} />} />
-          : <Text style={{ fontSize: 20 }}>Ainda não há nenhum cachorro cadastrado.</Text> }
+        : <Text style={{ fontSize: 20 }}>Ainda não há nenhum cachorro cadastrado.</Text> }
         <View style={{ marginTop: 15 }}>
           <Text>Novo cachorro</Text>
           <TextInput
@@ -107,23 +108,20 @@ export default class DogEdit extends Component {
 }
 
 function DogItem(props) {
-
   return (
     <TouchableHighlight
-      onPress={() => props.action}
+      onPress={props.action}
       style={{
         flex: 1,
-        padding: 12,
+        // padding: 12,
         flexDirection: 'row',
         alignItems: 'center' }}>
-      <View>
-        <Image
-          style={{ height: 40, width: 40, borderRadius: 20 }}
-          source={require('../../../../assets/imgs/german-shepard.jpg')} />
-        <Text style={{ marginLeft: 12, fontSize: 16 }}>{props.name}</Text>
-        <Text style={{ marginLeft: 12, fontSize: 16 }}>{props.breed}</Text>
-        <Text style={{ marginLeft: 12, fontSize: 16 }}>{props.age}</Text>
-      </View>
+      <Image
+        style={{ height: 40, width: 40, borderRadius: 20 }}
+        source={require('../../../../assets/imgs/german-shepard.jpg')} />
+      <Text style={{ marginLeft: 12, fontSize: 16 }}>UAHUAHAU{props.name}</Text>
+      <Text style={{ marginLeft: 12, fontSize: 16 }}>aspeok{props.breed}</Text>
+      <Text style={{ marginLeft: 12, fontSize: 16 }}>{props.age}</Text>
     </TouchableHighlight>
   );
 }

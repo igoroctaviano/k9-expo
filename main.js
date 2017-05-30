@@ -25,7 +25,8 @@ class App extends Component {
   }
 
   render() {
-    if (this.state.isReady) { return <AppNavigator />; }
+    if (this.state.isReady) { return <AppNavigator
+                                        style={{ paddingTop: Platform.OS === 'ios' ? 0 : StatusBar.currentHeight }} />; }
     return <Expo.AppLoading />;
   }
 }
@@ -41,7 +42,6 @@ const routes = {
 };
 const AppNavigator = StackNavigator(
     { ...routes, Index: { screen: Signin } },
-    { initialRouteName: 'Index' },
-    { cardStyle: { paddingTop: Platform.OS === 'ios' ? 0 : StatusBar.currentHeight } });
+    { initialRouteName: 'Index' });
 
 Expo.registerRootComponent(App);

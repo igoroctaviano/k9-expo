@@ -3,14 +3,14 @@ import * as firebase from "firebase";
 
 export default class Database {
   // Mobile
-  static setUserDetails(userId, name, mobile, address) {
+  static setUserDetails(userId, name, mobile, address, callback) {
     let userDetailsPath = "/user/" + userId + "/details";
 
     firebase.database().ref(userDetailsPath).set({
       name: name,
       mobile: mobile,
       address: address
-    });
+    }).then(callback);
   }
 
   static listenUserDetails(userId, callback) {
@@ -28,10 +28,10 @@ export default class Database {
   }
 
   // User Dog
-  static newUserDog(userId, dogId) {
+  static newUserDog(userId, dogId, callback) {
     let userDogsPath = "/user/" + userId + "/dogs";
 
-    firebase.database().ref(userDogsPath).push({ id: dogId });
+    firebase.database().ref(userDogsPath).push({ id: dogId }).then(callback);
   }
 
   static listenUserDogs(userId, callback) {
@@ -86,5 +86,20 @@ export default class Database {
       callback(details);
     });
   }
+
+  static listenDogsDetails(callback) {
+    let dogsDetailsPath = "/dog";
+    console.log('INSIDE DATABASE');
+    firebase.database().ref(dogsDetailsPath).on('value', snapshot => {
+      let details = [];
+
+      // Details changed on Database?
+      if (snapshot.val()) { details = snapshot.val(); }
+
+      // setState!
+      callback(Object.keys(details).map(key => details[key]));
+    });
+  }
 }
+
 
