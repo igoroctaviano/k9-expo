@@ -28,7 +28,7 @@ export default class Database {
   }
 
   // User Dog
-  static setUserDogs(userId, dogId) {
+  static newUserDog(userId, dogId) {
     let userDogsPath = "/user/" + userId + "/dogs";
 
     firebase.database().ref(userDogsPath).push({ id: dogId });
@@ -49,10 +49,22 @@ export default class Database {
   }
 
   // Dog
+  static newDog(name, breed, age, callback) {
+    let dogsPath = "/dog/";
+
+    firebase.database().ref(dogsPath).push({
+      details: {
+        name: name,
+        breed: breed,
+        age: age
+      }
+    }).then(data => callback(data.key));
+  }
+
   static setDogDetails(dogId, name, breed, age) {
     let dogDetailsPath = "/dog/" + dogId + "/details";
 
-    firebase.database().ref(dogDetailsPath).set({
+    firebase.database().ref(dogDetailsPath).push({
       name: name,
       breed: breed,
       age: age

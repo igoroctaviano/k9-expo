@@ -31,9 +31,7 @@ export default class DogEdit extends Component {
       let user = await firebase.auth().currentUser;
 
       // Listen for Dogs Changes
-      Database.listenUserDogs(user.uid, dogs => {
-        this.setState({ dogs: dogs });
-      });
+      Database.listenUserDogs(user.uid, dogs => this.setState({ dogs: dogs }));
 
       this.setState({ uid: user.uid });
     } catch (error) { this.setState({ response: error.toString() }); }
@@ -41,56 +39,62 @@ export default class DogEdit extends Component {
 
   editDog(id) {
     const { navigate } = this.props.navigation;
-
     navigate('DogEdit', { id: id });
   }
 
   saveDog() {
-
+    if (this.state.nameForm && this.state.breedForm && this.state.ageForm) {
+      Database.newDog(
+        this.state.nameForm,
+        this.state.breedForm,
+        this.state.ageForm,
+        key => Database.newUserDog(this.state.uid, key)
+      );
+    } else { this.setState({ response: 'Por favor, preencha todos os campos.' }); }
   }
 
   render() {
+    const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
+    const dogs = this.state.dogs ? ds.cloneWithRows(this.state.dogs) : null;
+
     return (
       <Wrapper>
-        { this.state.dogs ?
-          <View style={{ borderRadius: 20, backgroundColor: 'white' }}>
-            <ListView
-              dataSource={this.state.dogs}
-              renderRow={(dogs, id, section) => dogs.map(dog =>
-                <DogItem
-                  name={dog.name}
-                  breed={dog.breed}
-                  age={dog.age}
-                  event={this.editDog(dog.id)} />)} />
-            <View>
-              <Text>Novo cachorro</Text>
-              <TextInput
-                style={{ fontSize: 20 }}
-                placeholder="Nome"
-                placeholderTextColor="grey"
-                value={this.state.nameForm}
-                onChangeText={(nameForm) => this.setState({nameForm})} />
-              <TextInput
-                style={{ fontSize: 20 }}
-                placeholder="Raça"
-                placeholderTextColor="grey"
-                value={this.state.breedForm}
-                onChangeText={(breedForm) => this.setState({breedForm})} />
-              <TextInput
-                style={{ fontSize: 20 }}
-                placeholder="Idade"
-                placeholderTextColor="grey"
-                value={this.state.ageForm}
-                onChangeText={(ageForm) => this.setState({ageForm})} />
-              <Button
-                onPress={this.saveDog}
-                title="Cadastrar"
-                color="#841584"
-                accessibilityLabel="Clique aqui para cadastrar novo cachorro." />
-            </View>
-            <RedBox message={this.state.response} />
-          </View>
-        : <Text>Ainda não há nenhum cachorro cadastrado.</Text> }
+        { this.state.dogs !== null ?
+          <View><Text>{this.state.dogs.length}</Text></View>
+            /* {this.state.dogs.map(dog =>
+              <DogItem
+                name={dog.name}
+                breed={dog.breed}
+                age={dog.age}
+                action={this.editDog(dog.uid)} />)} */
+        : <Text style={{ fontSize: 20 }}>Ainda não há nenhum cachorro cadastrado.</Text> }
+        <View style={{ marginTop: 15 }}>
+          <Text>Novo cachorro</Text>
+          <TextInput
+            style={{ fontSize: 20 }}
+            placeholder="Nome"
+            placeholderTextColor="grey"
+            value={this.state.nameForm}
+            onChangeText={(nameForm) => this.setState({nameForm})} />
+          <TextInput
+            style={{ fontSize: 20 }}
+            placeholder="Raça"
+            placeholderTextColor="grey"
+            value={this.state.breedForm}
+            onChangeText={(breedForm) => this.setState({breedForm})} />
+          <TextInput
+            style={{ fontSize: 20 }}
+            placeholder="Idade"
+            placeholderTextColor="grey"
+            value={this.state.ageForm}
+            onChangeText={(ageForm) => this.setState({ageForm})} />
+          <Button
+            onPress={this.saveDog}
+            title="Cadastrar"
+            color="#841584"
+            accessibilityLabel="Clique aqui para cadastrar novo cachorro." />
+        </View>
+        <RedBox message={this.state.response} />
       </Wrapper>
     );
   }
@@ -98,11 +102,19 @@ export default class DogEdit extends Component {
 
 function DogItem(props) {
   return (
-    <TouchableHighlight onPress={props.event}>
-      <Image source={require('../../../../assets/imgs/german-shepard.jpg')} />
-      <Text>{props.name}</Text>
-      <Text>{props.breed}</Text>
-      <Text>{props.age}</Text>
+    <TouchableHighlight
+      onPress={props.event}
+      style={{
+        flex: 1,
+        padding: 12,
+        flexDirection: 'row',
+        alignItems: 'center' }}>
+      <Image
+        style={{ height: 40, width: 40, borderRadius: 20 }}
+        source={require('../../../../assets/imgs/german-shepard.jpg')} />
+      <Text style={{ marginLeft: 12, fontSize: 16 }}>{props.name}</Text>
+      <Text style={{ marginLeft: 12, fontSize: 16 }}>{props.breed}</Text>
+      <Text style={{ marginLeft: 12, fontSize: 16 }}>{props.age}</Text>
     </TouchableHighlight>
   );
 }
