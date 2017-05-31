@@ -11,6 +11,6 @@ export default StyleSheet.create({
   },
   content: {
     width: '90%',
-    // height: '90%',
-  },
+    height: '98%',
+  }
 });

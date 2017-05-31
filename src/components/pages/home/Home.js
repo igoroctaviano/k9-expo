@@ -1,7 +1,7 @@
 /* Dependencies */
 import * as firebase from "firebase";
 import React, { Component } from 'react';
-import { View, Button, Text, ActivityIndicator } from 'react-native';
+import { View, Button, Text } from 'react-native';
 
 /* Database */
 import Database from "../../../database/Database";
@@ -39,8 +39,7 @@ export default class Home extends Component {
           this.setState({
             name: details.name,
             mobile: details.mobile,
-            address: details.address,
-            hasDetails: true
+            address: details.address
           });
         }
       });
@@ -61,37 +60,36 @@ export default class Home extends Component {
   }
 
   render() {
-    const { name, mobile, address, response, hasDetails } = this.state;
+    const { name, mobile, address, response } = this.state;
 
     return (
-        <Wrapper>
-          <View style={{
-            flex: 1,
-            flexDirection: 'column',
-            justifyContent: 'space-between'}}>
-            <Text style={{ fontSize: 20 }}>Olá {name}!</Text>
-            <Text style={{ fontSize: 20 }}>Instituição: {name}</Text>
-            <Text style={{ fontSize: 20 }}>Endereço: {address}</Text>
-            <Text style={{ fontSize: 20 }}>Telefone: {mobile}</Text>
-            <Button
-              onPress={this.updateData}
-              title="Atualizar"
-              color="#841584"
-              accessibilityLabel="Clique aqui para atualizar os dados." />
-            <Button
-              onPress={this.dogsList}
-              title="Cachorros"
-              color="#841584"
-              accessibilityLabel="Clique aqui para exibir lista de cachorros." />
-            <Button
-              onPress={this.logout}
-              title="Sair"
-              color="#841584"
-              accessibilityLabel="Clique aqui para sair." />
-            <RedBox message={response} />
-          </View>
-          { hasDetails && name === '' ? <ActivityIndicator size="large" color="purple" /> : null }
-        </Wrapper>
+      <Wrapper>
+        <View style={{
+          flex: 1,
+          flexDirection: 'column',
+          justifyContent: 'space-between'}}>
+          <Text style={{ fontSize: 20 }}>Olá {name}!</Text>
+          <Text style={{ fontSize: 20 }}>Instituição: {name}</Text>
+          <Text style={{ fontSize: 20 }}>Endereço: {address}</Text>
+          <Text style={{ fontSize: 20 }}>Telefone: {mobile}</Text>
+          <Button
+            onPress={this.updateData}
+            title="Atualizar"
+            color="#841584"
+            accessibilityLabel="Clique aqui para atualizar os dados." />
+          <Button
+            onPress={this.dogsList}
+            title="Cachorros"
+            color="#841584"
+            accessibilityLabel="Clique aqui para exibir lista de cachorros." />
+          <Button
+            onPress={this.logout}
+            title="Sair"
+            color="#841584"
+            accessibilityLabel="Clique aqui para sair." />
+          <RedBox message={response} />
+        </View>
+      </Wrapper>
     );
   }
 }

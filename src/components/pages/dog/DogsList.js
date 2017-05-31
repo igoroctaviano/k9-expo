@@ -54,10 +54,14 @@ export default class DogEdit extends Component {
   getDogsDataSource() {
     const { dogs, userDogs } = this.state;
 
-    const userDogsDetails = userDogs.length > 0 && dogs.length > 0 ?
+    /* const userDogsDetails = userDogs && userDogs.length > 0 && dogs && dogs.length > 0 ?
       dogs.filter(dog => userDogs.indexOf(dog.key) >= 0) : null;
     const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
-    return userDogsDetails ? ds.cloneWithRows(userDogsDetails, userDogsDetails.map(dog => dog.key)) : null;
+    return userDogsDetails ? ds.cloneWithRows(userDogsDetails, userDogsDetails.map(dog => dog.key)) : null; */
+    console.log('userDogs' + userDogs);
+    console.log('dogs' + dogs);
+    const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
+    return dogs ? ds.cloneWithRows(dogs, dogs.map(dog => dog.key)) : null;
   }
 
   render() {
@@ -69,6 +73,8 @@ export default class DogEdit extends Component {
     } = this.state;
 
     const dogsDataSource = this.getDogsDataSource();
+
+    console.log('DOGSDATASOURCE' + dogsDataSource);
 
     return (
       <Wrapper>

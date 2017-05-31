@@ -35,14 +35,16 @@ export default class Edit extends Component {
 
       // Listen for Details Changes
       Database.listenUserDetails(user.uid, details => {
-        this.setState({
-          name: details.name,
-          nameForm: details.name,
-          mobile: details.mobile,
-          mobileForm: details.mobile,
-          address: details.address,
-          addressForm: details.address,
-        });
+        if (details) {
+          this.setState({
+            name: details.name,
+            nameForm: details.name,
+            mobile: details.mobile,
+            mobileForm: details.mobile,
+            address: details.address,
+            addressForm: details.address,
+          });
+        }
       });
 
       this.setState({ uid: user.uid });
@@ -63,30 +65,32 @@ export default class Edit extends Component {
   }
 
   render() {
+    const { nameForm, mobileForm, addressForm, response } = this.state;
+
     return (
       <Wrapper>
         <View style={{
           flex: 1,
           flexDirection: 'column',
           justifyContent: 'space-between'}}>
-          <RedBox message={this.state.response} />
+          <RedBox message={response} />
           <TextInput
             style={{ fontSize: 20 }}
             placeholder="Instituição"
             placeholderTextColor="grey"
-            value={this.state.nameForm}
+            value={nameForm}
             onChangeText={(nameForm) => this.setState({nameForm})} />
           <TextInput
             style={{ fontSize: 20 }}
             placeholder="Telefone"
             placeholderTextColor="grey"
-            value={this.state.mobileForm}
+            value={mobileForm}
             onChangeText={(mobileForm) => this.setState({mobileForm})} />
           <TextInput
             style={{ fontSize: 20 }}
             placeholder="Endereço"
             placeholderTextColor="grey"
-            value={this.state.addressForm}
+            value={addressForm}
             onChangeText={(addressForm) => this.setState({addressForm})} />
           <Button
             onPress={this.saveData}
