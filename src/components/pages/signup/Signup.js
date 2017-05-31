@@ -7,7 +7,6 @@ import { View, Button, TextInput } from 'react-native';
 import Logo from '../../components/logo/Logo';
 import RedBox from '../../components/redbox/RedBox';
 import Wrapper from '../../components/wrapper/Wrapper';
-import Database from "../../../database/Database";
 
 export default class Signup extends Component {
   constructor(props) {

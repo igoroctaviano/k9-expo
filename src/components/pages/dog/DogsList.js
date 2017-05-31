@@ -47,24 +47,28 @@ export default class DogEdit extends Component {
         nameForm,
         breedForm,
         ageForm,
-        id => Database.newUserDog(uid, id, () => alert('Cachorro cadastrado com sucesso!'))
-      );
+        id => Database.newUserDog(uid, id, () => alert('Cachorro cadastrado com sucesso!')));
     } else { this.setState({ response: 'Por favor, preencha todos os campos.' }); }
+  }
+
+  getDogsDataSource() {
+    const { dogs, userDogs } = this.state;
+
+    const userDogsDetails = userDogs.length > 0 && dogs.length > 0 ?
+      dogs.filter(dog => userDogs.indexOf(dog.key) >= 0) : null;
+    const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
+    return userDogsDetails ? ds.cloneWithRows(userDogsDetails, userDogsDetails.map(dog => dog.key)) : null;
   }
 
   render() {
     const {
-      dogs,
-      userDogs,
       nameForm,
       breedForm,
       ageForm,
       response
     } = this.state;
 
-    const userDogsDetails = userDogs.length > 0 && dogs.length > 0 ? dogs.filter(dog => userDogs.indexOf(dog.key) >= 0) : null;
-    const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
-    const dogsDataSource = userDogsDetails ? ds.cloneWithRows(userDogsDetails, userDogsDetails.map(dog => dog.key)) : null;
+    const dogsDataSource = this.getDogsDataSource();
 
     return (
       <Wrapper>

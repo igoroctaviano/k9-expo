@@ -1,7 +1,7 @@
 /* Dependencies */
 import Expo from 'expo';
 import React, { Component } from 'react';
-import { Platform, StatusBar, ActivityIndicator } from 'react-native';
+import { Platform, StatusBar } from 'react-native';
 import { StackNavigator } from 'react-navigation';
 
 /* Components */
