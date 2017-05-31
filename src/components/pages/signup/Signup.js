@@ -7,6 +7,7 @@ import { View, Button, TextInput } from 'react-native';
 import Logo from '../../components/logo/Logo';
 import RedBox from '../../components/redbox/RedBox';
 import Wrapper from '../../components/wrapper/Wrapper';
+import Database from "../../../database/Database";
 
 export default class Signup extends Component {
   constructor(props) {
@@ -17,8 +18,6 @@ export default class Signup extends Component {
       password: '',
       name: '',
       mobile: '',
-      address: '',
-      isReady: true,
       response: '',
     };
 
@@ -28,18 +27,17 @@ export default class Signup extends Component {
   static navigationOptions = { title: 'Cadastrar' };
 
   async signup() {
-    const { navigate } = this.props.navigation;
+    const { name, mobile, email, password } = this.state;
 
-    try {
-      await firebase.auth().createUserWithEmailAndPassword(this.state.email, this.state.password);
-      alert("Cadastro efetuado com sucesso!");
-      setTimeout(() =>
-        navigate('Home', {
-          name: this.state.name,
-          mobile: this.state.mobile,
-          address: this.state.address
-        }), 1500);
-    } catch (error) { this.setState({ response: error.toString() }); }
+    if (email && password && name && mobile) {
+      try {
+        await firebase.auth().createUserWithEmailAndPassword(email, password)
+        .then(() => {
+          alert('Cadastrado efetuado com sucesso!');
+          this.props.navigation.navigate('Home');
+        });
+      } catch (error) { this.setState({ response: error.toString() }); }
+    } else { this.setState({ response: 'Por favor, preencha todos os campos.' }); }
   }
 
   render() {

@@ -2,7 +2,7 @@
 import * as firebase from "firebase";
 
 export default class Database {
-  // Mobile
+  // User
   static setUserDetails(userId, name, mobile, address, callback) {
     let userDetailsPath = "/user/" + userId + "/details";
 
@@ -40,10 +40,8 @@ export default class Database {
     firebase.database().ref(userDogsPath).on('value', snapshot => {
       let dogs;
 
-      // Details changed on Database?
-      if (snapshot.val()) { dogs = snapshot.val(); }
+      if (snapshot.val()) { dogs = snapshot.val(); console.log('listenUserDogs -> userDogs' + snapshot.val()); }
 
-      // setState!
       callback(dogs);
     });
   }
@@ -68,8 +66,6 @@ export default class Database {
       name: name,
       breed: breed,
       age: age
-    }).then(data => {
-       alert(data);
     });
   }
 
@@ -79,24 +75,22 @@ export default class Database {
     firebase.database().ref(dogDetailsPath).on('value', snapshot => {
       let details;
 
-      // Details changed on Database?
       if (snapshot.val()) { details = snapshot.val(); }
 
-      // setState!
       callback(details);
     });
   }
 
   static listenDogsDetails(callback) {
     let dogsDetailsPath = "/dog";
-    console.log('INSIDE DATABASE');
+
     firebase.database().ref(dogsDetailsPath).on('value', snapshot => {
       let details = [];
 
-      // Details changed on Database?
       if (snapshot.val()) { details = snapshot.val(); }
 
-      // setState!
+      Object.keys(details).forEach(key => details[key].key = key);
+
       callback(Object.keys(details).map(key => details[key]));
     });
   }

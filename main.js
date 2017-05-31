@@ -1,7 +1,7 @@
 /* Dependencies */
 import Expo from 'expo';
 import React, { Component } from 'react';
-import { Platform, StatusBar } from 'react-native';
+import { Platform, StatusBar, ActivityIndicator } from 'react-native';
 import { StackNavigator } from 'react-navigation';
 
 /* Components */
@@ -20,14 +20,12 @@ class App extends Component {
     super(props);
 
     Firebase.initialise();
-
-    this.state = { isReady: 'true' };
   }
 
   render() {
-    if (this.state.isReady) { return <AppNavigator
-                                        style={{ paddingTop: Platform.OS === 'ios' ? 0 : StatusBar.currentHeight }} />; }
-    return <Expo.AppLoading />;
+    return (
+      <AppNavigator style={{ marginTop: Platform.OS === 'ios' ? 0 : StatusBar.currentHeight }} />
+    );
   }
 }
 
@@ -40,8 +38,6 @@ const routes = {
   DogEdit: { screen: DogEdit },
   DogsList: { screen: DogsList }
 };
-const AppNavigator = StackNavigator(
-    { ...routes, Index: { screen: Signin } },
-    { initialRouteName: 'Index' });
+const AppNavigator = StackNavigator({ ...routes, Index: { screen: Signin } }, { initialRouteName: 'Index' });
 
 Expo.registerRootComponent(App);

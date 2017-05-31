@@ -1,7 +1,7 @@
 /* Dependencies */
 import * as firebase from "firebase";
 import React, { Component } from 'react';
-import { TouchableHighlight, Text, Image, ListView, View, Button, TextInput } from 'react-native';
+import { TouchableHighlight, Text, Image, ListView, View, Button, TextInput, ActivityIndicator } from 'react-native';
 
 /* Database */
 import Database from "../../../database/Database";
@@ -15,14 +15,14 @@ export default class DogEdit extends Component {
     this.state = {
       uid: '',
       dogs: [],
-      isReady: false,
+      userDogs: [],
       response: '',
     };
 
     this.saveDog = this.saveDog.bind(this);
   }
 
-  static navigationOptions = { title: 'Cachorros cadastrados' };
+  static navigationOptions = { title: 'Cachorros Cadastrados' };
 
   async componentDidMount() {
     try {
@@ -32,56 +32,75 @@ export default class DogEdit extends Component {
       // Listen for Dogs Changes
       Database.listenDogsDetails(dogs => this.setState({ dogs: dogs }));
 
+      // Listen for User Dogs Changes
+      Database.listenUserDogs(user.uid, dogs => this.setState({ userDogs: dogs }));
+
       this.setState({ uid: user.uid });
     } catch (error) { this.setState({ response: error.toString() }); }
   }
 
   saveDog() {
-    if (this.state.nameForm && this.state.breedForm && this.state.ageForm) {
+    const { nameForm, breedForm, ageForm, uid } = this.state;
+
+    if (nameForm && breedForm && ageForm) {
       Database.newDog(
-        this.state.nameForm,
-        this.state.breedForm,
-        this.state.ageForm,
-        id => Database.newUserDog(this.state.uid, id, () => alert('Cachorro cadastrado com sucesso!'))
+        nameForm,
+        breedForm,
+        ageForm,
+        id => Database.newUserDog(uid, id, () => alert('Cachorro cadastrado com sucesso!'))
       );
     } else { this.setState({ response: 'Por favor, preencha todos os campos.' }); }
   }
 
   render() {
+    const {
+      dogs,
+      userDogs,
+      nameForm,
+      breedForm,
+      ageForm,
+      response
+    } = this.state;
+
+    const userDogsDetails = userDogs.length > 0 && dogs.length > 0 ? dogs.filter(dog => userDogs.indexOf(dog.key) >= 0) : null;
     const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
-    const dogs = this.state.dogs ? ds.cloneWithRows(this.state.dogs) : null;
+    const dogsDataSource = userDogsDetails ? ds.cloneWithRows(userDogsDetails, userDogsDetails.map(dog => dog.key)) : null;
 
     return (
       <Wrapper>
-        { this.state.dogs.length > 0 ?
+        { dogsDataSource ?
           <ListView
             initialListSize={4}
-            dataSource={dogs}
+            dataSource={dogsDataSource}
             renderRow={dog =>
               <DogItem
                 name={dog.details.name}
                 breed={dog.details.breed}
                 age={dog.details.age} />} />
-          : <Text style={{ fontSize: 20 }}>Ainda não há nenhum cachorro cadastrado.</Text> }
+          : <View style={{ flex: 1, flexDirection: 'column' }}>
+              <ActivityIndicator size="large" color="purple" />
+              <Text style={{ fontSize: 20 }}>Ainda não há nenhum cachorro cadastrado.</Text>
+            </View>
+        }
         <View style={{ marginTop: 15 }}>
-          <Text>Novo cachorro</Text>
+          <Text style={{ fontSize: 15 }}>Novo cachorro</Text>
           <TextInput
             style={{ fontSize: 20 }}
             placeholder="Nome"
             placeholderTextColor="grey"
-            value={this.state.nameForm}
+            value={nameForm}
             onChangeText={(nameForm) => this.setState({nameForm})} />
           <TextInput
             style={{ fontSize: 20 }}
             placeholder="Raça"
             placeholderTextColor="grey"
-            value={this.state.breedForm}
+            value={breedForm}
             onChangeText={(breedForm) => this.setState({breedForm})} />
           <TextInput
             style={{ fontSize: 20 }}
             placeholder="Idade"
             placeholderTextColor="grey"
-            value={this.state.ageForm}
+            value={ageForm}
             onChangeText={(ageForm) => this.setState({ageForm})} />
           <Button
             onPress={this.saveDog}
@@ -89,7 +108,7 @@ export default class DogEdit extends Component {
             color="#841584"
             accessibilityLabel="Clique aqui para cadastrar novo cachorro." />
         </View>
-        <RedBox message={this.state.response} />
+        <RedBox message={response} />
       </Wrapper>
     );
   }

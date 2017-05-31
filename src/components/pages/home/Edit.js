@@ -20,14 +20,13 @@ export default class Edit extends Component {
       mobileForm: '',
       address: '',
       addressForm: '',
-      isReady: false,
       response: '',
     };
 
     this.saveData = this.saveData.bind(this);
   }
 
-  static navigationOptions = { title: 'Atualizar dados' };
+  static navigationOptions = { title: 'Atualizar Dados' };
 
   async componentDidMount() {
     try {
@@ -51,12 +50,14 @@ export default class Edit extends Component {
   }
 
   saveData() {
-    if (this.state.uid && this.state.nameForm && this.state.mobileForm && this.state.addressForm) {
+    const { uid, nameForm, mobileForm, addressForm } = this.state;
+
+    if (uid && nameForm && mobileForm && addressForm) {
       Database.setUserDetails(
-        this.state.uid,
-        this.state.nameForm,
-        this.state.mobileForm,
-        this.state.addressForm, () => alert('Dados atualizados com sucesso!')
+        uid,
+        nameForm,
+        mobileForm,
+        addressForm, () => alert('Dados atualizados com sucesso!')
       );
     } else { this.setState({ response: 'Por favor, preencha todos os campos.' }); }
   }

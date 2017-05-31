@@ -1,8 +1,7 @@
 /* Dependencies */
-import Expo from 'expo';
 import * as firebase from "firebase";
 import React, { Component } from 'react';
-import { View, Button, Text, TextInput } from 'react-native';
+import { View, Button, Text, ActivityIndicator } from 'react-native';
 
 /* Database */
 import Database from "../../../database/Database";
@@ -15,11 +14,11 @@ export default class Home extends Component {
 
     this.state = {
       uid: '',
-      name: this.props.name ? this.props.name : '',
-      mobile: this.props.mobile ? this.props.mobile : '',
-      address: this.props.address ? this.props.address : '',
-      isReady: false,
+      name: '',
+      mobile: '',
+      address: '',
       response: '',
+      hasDetails: false
     };
 
     this.logout = this.logout.bind(this);
@@ -27,7 +26,7 @@ export default class Home extends Component {
     this.dogsList = this.dogsList.bind(this);
   }
 
-  static navigationOptions = { title: 'Bem-vindo ' /* + this.props.user.name */ };
+  static navigationOptions = { title: 'Bem-Vindo!' };
 
   async componentDidMount() {
     try {
@@ -36,65 +35,62 @@ export default class Home extends Component {
 
       // Listen for Details Changes
       Database.listenUserDetails(user.uid, details => {
-        this.setState({
-          name: details.name,
-          mobile: details.mobile,
-          address: details.address });
+        if (details) {
+          this.setState({
+            name: details.name,
+            mobile: details.mobile,
+            address: details.address,
+            hasDetails: true
+          });
+        }
       });
 
       this.setState({ uid: user.uid });
     } catch (error) { this.setState({ response: error.toString() }); }
   }
 
-  updateData() {
-    const { navigate } = this.props.navigation;
-    navigate('Edit');
-  }
+  updateData() { this.props.navigation.navigate('Edit'); }
 
-  dogsList() {
-    const { navigate } = this.props.navigation;
-    navigate('DogsList');
-  }
+  dogsList() { this.props.navigation.navigate('DogsList'); }
 
   async logout() {
-    const { navigate } = this.props.navigation;
-
     try {
       await firebase.auth().signOut();
-      navigate('Signin');
+      this.props.navigation.navigate('Signin');
     } catch (error) { this.setState({ response: error.toString() }); }
   }
 
   render() {
+    const { name, mobile, address, response, hasDetails } = this.state;
+
     return (
         <Wrapper>
-          { this.state.name ?
-            <View style={{
-              flex: 1,
-              flexDirection: 'column',
-              justifyContent: 'space-between'}}>
-              <Text style={{ fontSize: 20 }}>Olá {this.state.name}!</Text>
-              <Text style={{ fontSize: 20 }}>Instituição: {this.state.name}</Text>
-              <Text style={{ fontSize: 20 }}>Endereço: {this.state.address}</Text>
-              <Text style={{ fontSize: 20 }}>Telefone: {this.state.mobile}</Text>
-              <Button
-                onPress={this.updateData}
-                title="Atualizar"
-                color="#841584"
-                accessibilityLabel="Clique aqui para atualizar os dados." />
-              <Button
-                onPress={this.dogsList}
-                title="Cachorros"
-                color="#841584"
-                accessibilityLabel="Clique aqui para exibir lista de cachorros." />
-              <Button
-                onPress={this.logout}
-                title="Sair"
-                color="#841584"
-                accessibilityLabel="Clique aqui para sair." />
-              <RedBox message={this.state.response} />
-            </View>
-          : <Expo.AppLoading /> }
+          <View style={{
+            flex: 1,
+            flexDirection: 'column',
+            justifyContent: 'space-between'}}>
+            <Text style={{ fontSize: 20 }}>Olá {name}!</Text>
+            <Text style={{ fontSize: 20 }}>Instituição: {name}</Text>
+            <Text style={{ fontSize: 20 }}>Endereço: {address}</Text>
+            <Text style={{ fontSize: 20 }}>Telefone: {mobile}</Text>
+            <Button
+              onPress={this.updateData}
+              title="Atualizar"
+              color="#841584"
+              accessibilityLabel="Clique aqui para atualizar os dados." />
+            <Button
+              onPress={this.dogsList}
+              title="Cachorros"
+              color="#841584"
+              accessibilityLabel="Clique aqui para exibir lista de cachorros." />
+            <Button
+              onPress={this.logout}
+              title="Sair"
+              color="#841584"
+              accessibilityLabel="Clique aqui para sair." />
+            <RedBox message={response} />
+          </View>
+          { hasDetails && name === '' ? <ActivityIndicator size="large" color="purple" /> : null }
         </Wrapper>
     );
   }

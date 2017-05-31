@@ -15,7 +15,6 @@ export default class Signin extends Component {
     this.state = {
       email: '',
       password: '',
-      isReady: false,
       response: '',
     };
 
@@ -23,17 +22,16 @@ export default class Signin extends Component {
   }
 
   async signin() {
-    const { navigate } = this.props.navigation;
+    const { email, password } = this.state;
 
     try {
-      await firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.password);
-      alert("Bem-vindo!");
-      setTimeout(() => navigate('Home'), 1500);
+      await firebase.auth().signInWithEmailAndPassword(email, password);
+      setTimeout(() => this.props.navigation.navigate('Home'), 1500);
     } catch (error) { this.setState({ response: error.toString() }); }
   }
 
   render() {
-    const { navigate } = this.props.navigation;
+    const { email, response } = this.state;
 
     return (
       <Wrapper>
@@ -58,11 +56,11 @@ export default class Signin extends Component {
             color="#841584"
             accessibilityLabel="Clique aqui para efetuar o login." />
           <Button
-            onPress={() => navigate('Signup', { email: this.state.email })}
+            onPress={() => this.props.navigation.navigate('Signup', { email: email })}
             title="Cadastrar"
             color="#841584"
             accessibilityLabel="Ainda não possui conta? Clique aqui para fazer seu cadastro." />
-          <RedBox message={this.state.response} />
+          <RedBox message={response} />
         </View>
       </Wrapper>
     );
