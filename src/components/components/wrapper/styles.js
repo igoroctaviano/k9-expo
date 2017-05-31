@@ -10,7 +10,7 @@ export default StyleSheet.create({
     backgroundColor: '#BABAC2',
   },
   content: {
-    width: '90%',
+    width: '95%',
     height: '98%',
   }
 });

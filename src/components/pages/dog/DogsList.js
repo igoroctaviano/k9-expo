@@ -30,10 +30,14 @@ export default class DogEdit extends Component {
       let user = await firebase.auth().currentUser;
 
       // Listen for Dogs Changes
-      Database.listenDogsDetails(dogs => this.setState({ dogs: dogs }));
+      Database.listenDogsDetails(dogs => {
+        this.setState({ dogs: dogs })
+      });
 
       // Listen for User Dogs Changes
-      Database.listenUserDogs(user.uid, dogs => this.setState({ userDogs: dogs }));
+      Database.listenUserDogs(user.uid, dogs => {
+        this.setState({ userDogs: dogs })
+      });
 
       this.setState({ uid: user.uid });
     } catch (error) { this.setState({ response: error.toString() }); }
@@ -54,14 +58,10 @@ export default class DogEdit extends Component {
   getDogsDataSource() {
     const { dogs, userDogs } = this.state;
 
-    /* const userDogsDetails = userDogs && userDogs.length > 0 && dogs && dogs.length > 0 ?
-      dogs.filter(dog => userDogs.indexOf(dog.key) >= 0) : null;
+    console.log('userDogs', userDogs);
+    const filteredDogs = dogs ? dogs.filter(dog => userDogs ? userDogs.map(dog => dog.id).indexOf(dog.key) >= 0 : false) : null;
     const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
-    return userDogsDetails ? ds.cloneWithRows(userDogsDetails, userDogsDetails.map(dog => dog.key)) : null; */
-    console.log('userDogs' + userDogs);
-    console.log('dogs' + dogs);
-    const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
-    return dogs ? ds.cloneWithRows(dogs, dogs.map(dog => dog.key)) : null;
+    return dogs ? ds.cloneWithRows(filteredDogs) : null;
   }
 
   render() {
@@ -74,13 +74,12 @@ export default class DogEdit extends Component {
 
     const dogsDataSource = this.getDogsDataSource();
 
-    console.log('DOGSDATASOURCE' + dogsDataSource);
-
     return (
       <Wrapper>
         { dogsDataSource ?
           <ListView
             initialListSize={4}
+            enableEmptySections={true}
             dataSource={dogsDataSource}
             renderRow={dog =>
               <DogItem
@@ -125,7 +124,6 @@ export default class DogEdit extends Component {
 }
 
 function DogItem(props) {
-
   return (
     <TouchableHighlight style={{
       flex: 1,

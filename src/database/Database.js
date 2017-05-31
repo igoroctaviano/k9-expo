@@ -38,11 +38,12 @@ export default class Database {
     let userDogsPath = "/user/" + userId + "/dogs";
 
     firebase.database().ref(userDogsPath).on('value', snapshot => {
-      let dogs;
+      let dogs = [];
 
-      if (snapshot.val()) { dogs = snapshot.val(); console.log('listenUserDogs -> userDogs' + snapshot.val()); }
+      if (snapshot.val()) { dogs = snapshot.val(); console.log('SNAPSHOT', snapshot.val()); }
 
-      callback(dogs);
+      console.log('SNAPSHOT OBJECT ARRAY', Object.keys(dogs).map(key => dogs[key]));
+      callback(Object.keys(dogs).map(key => dogs[key]));
     });
   }
 
