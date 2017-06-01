@@ -20,6 +20,7 @@ export default class DogEdit extends Component {
     };
 
     this.saveDog = this.saveDog.bind(this);
+    this.editDog = this.editDog.bind(this);
   }
 
   static navigationOptions = { title: 'Cachorros Cadastrados' };
@@ -43,6 +44,8 @@ export default class DogEdit extends Component {
     } catch (error) { this.setState({ response: error.toString() }); }
   }
 
+  editDog() { this.props.navigation.navigate('DogEdit'); }
+
   saveDog() {
     const { nameForm, breedForm, ageForm, uid } = this.state;
 
@@ -58,9 +61,9 @@ export default class DogEdit extends Component {
   getDogsDataSource() {
     const { dogs, userDogs } = this.state;
 
-    console.log('userDogs', userDogs);
     const filteredDogs = dogs ? dogs.filter(dog => userDogs ? userDogs.map(dog => dog.id).indexOf(dog.key) >= 0 : false) : null;
     const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
+
     return dogs ? ds.cloneWithRows(filteredDogs) : null;
   }
 
@@ -83,6 +86,7 @@ export default class DogEdit extends Component {
             dataSource={dogsDataSource}
             renderRow={dog =>
               <DogItem
+                clickAction={this.editDog}
                 name={dog.details.name}
                 breed={dog.details.breed}
                 age={dog.details.age} />} />
@@ -125,7 +129,9 @@ export default class DogEdit extends Component {
 
 function DogItem(props) {
   return (
-    <TouchableHighlight style={{
+    <TouchableHighlight
+      onPress={props.clickAction}
+      style={{
       flex: 1,
       padding: 12,
       flexDirection: 'row',

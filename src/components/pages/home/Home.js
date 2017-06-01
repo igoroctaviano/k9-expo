@@ -1,7 +1,7 @@
 /* Dependencies */
 import * as firebase from "firebase";
 import React, { Component } from 'react';
-import { View, Button, Text } from 'react-native';
+import { View, Button, Text, ActivityIndicator } from 'react-native';
 
 /* Database */
 import Database from "../../../database/Database";
@@ -64,7 +64,7 @@ export default class Home extends Component {
 
     return (
       <Wrapper>
-        <View style={{
+        { name ? <View style={{
           flex: 1,
           flexDirection: 'column',
           justifyContent: 'space-between'}}>
@@ -88,7 +88,7 @@ export default class Home extends Component {
             color="#841584"
             accessibilityLabel="Clique aqui para sair." />
           <RedBox message={response} />
-        </View>
+        </View> : <ActivityIndicator size="large" color="purple"/> }
       </Wrapper>
     );
   }

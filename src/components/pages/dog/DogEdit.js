@@ -13,80 +13,93 @@ export default class DogEdit extends Component {
     super(props);
 
     this.state = {
-      uid: '',
-      name: this.props.name ? this.props.name : '',
-      nameForm: this.props.name ? this.props.name : '',
-      breed: this.props.breed ? this.props.breed : '',
-      breedForm: this.props.breed ? this.props.breed : '',
-      age: this.props.age ? this.props.age : '',
-      ageForm: this.props.age ? this.props.age : '',
-      isReady: false,
+      dogId: this.props.dogId,
+      name: '',
+      nameForm: '',
+      breed: '',
+      breedForm: '',
+      age: '',
+      ageForm: '',
       response: '',
     };
 
     this.saveData = this.saveData.bind(this);
+    this.deleteData = this.deleteData.bind(this);
   }
 
-  static navigationOptions = { title: 'Atualizar dados' };
+  static navigationOptions = { title: 'Atualizar Dados' };
 
   async componentDidMount() {
     try {
-      // Get User Credentials
-      let user = await firebase.auth().currentUser;
+      const { dogId } = this.state;
 
-      // Listen for Details Changes
-      Database.listenDogDetails(user.uid, details => {
-        this.setState({
-          name: details.name,
-          nameForm: details.name,
-          breed: details.breed,
-          breedForm: details.breed,
-          age: details.age,
-          ageForm: details.age,
-        });
+      Database.listenDogDetails(dogId, details => {
+        if (details) {
+          this.setState({
+            name: details.name,
+            nameForm: details.name,
+            breed: details.breed,
+            breedForm: details.breed,
+            age: details.age,
+            ageForm: details.age,
+          });
+        }
       });
-
-      this.setState({ uid: user.uid });
     } catch (error) { this.setState({ response: error.toString() }); }
   }
 
   saveData() {
-    if (this.state.uid && this.state.nameForm && this.state.breedForm && this.state.ageForm) {
-      Database.setUserDetails(this.state.uid, this.state.nameForm, this.state.breedForm, this.state.ageForm);
+    const { dogId, nameForm, breedForm, ageForm } = this.state;
+
+    if (dogId && nameForm && breedForm && ageForm) {
+      Database.setDogDetails(dogId, nameForm, breedForm, ageForm);
     } else { this.setState({ response: 'Por favor, preencha todos os campos.' }); }
   }
 
+  deleteData() {
+    Database.deleteDog(this.state.dogId);
+    alert('Item deletado com sucesso!');
+    this.props.navigation.navigate('DogsList');
+  }
+
   render() {
+    const { nameForm, breedForm, ageForm, response } = this.state;
+
     return (
       <Wrapper>
         <View style={{
           flex: 1,
           flexDirection: 'column',
           justifyContent: 'space-between'}}>
-          <RedBox message={this.state.response} />
+          <RedBox message={response} />
           <TextInput
             style={{ fontSize: 20 }}
             placeholder="Nome"
             placeholderTextColor="grey"
-            value={this.state.nameForm}
+            value={nameForm}
             onChangeText={(nameForm) => this.setState({nameForm})} />
           <TextInput
             style={{ fontSize: 20 }}
             placeholder="Raça"
             placeholderTextColor="grey"
-            value={this.state.breedForm}
+            value={breedForm}
             onChangeText={(breedForm) => this.setState({breedForm})} />
           <TextInput
             style={{ fontSize: 20 }}
             placeholder="Idade"
             placeholderTextColor="grey"
-            value={this.state.ageForm}
+            value={ageForm}
             onChangeText={(ageForm) => this.setState({ageForm})} />
           <Button
             onPress={this.saveData}
             title="Atualizar"
             color="#841584"
             accessibilityLabel="Clique aqui para atualizar os dados." />
+          <Button
+            onPress={this.deleteData}
+            title="Deletar"
+            color="#841584"
+            accessibilityLabel="Clique aqui para deletar os dados." />
         </View>
       </Wrapper>
     );
