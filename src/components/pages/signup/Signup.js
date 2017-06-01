@@ -13,7 +13,7 @@ export default class Signup extends Component {
     super(props);
 
     this.state = {
-      email: this.props.email ? this.props.email : '',
+      email: this.props.navigation.state.params.email ? this.props.navigation.state.params.email : '',
       password: '',
       name: '',
       mobile: '',

@@ -44,7 +44,10 @@ export default class DogEdit extends Component {
     } catch (error) { this.setState({ response: error.toString() }); }
   }
 
-  editDog() { this.props.navigation.navigate('DogEdit'); }
+  editDog(dogId) {
+    const { uid, nameForm, breedForm, ageForm } = this.state;
+    this.props.navigation.navigate('DogEdit', { uid: uid, dogId: dogId, name: nameForm, breed: breedForm, age: ageForm });
+  }
 
   saveDog() {
     const { nameForm, breedForm, ageForm, uid } = this.state;
@@ -67,6 +70,28 @@ export default class DogEdit extends Component {
     return dogs ? ds.cloneWithRows(filteredDogs) : null;
   }
 
+  DogItem(name, breed, age, key) {
+    return (
+      <TouchableHighlight
+        onPress={() => this.editDog(key)}
+        style={{
+          flex: 1,
+          padding: 12,
+          flexDirection: 'row',
+          alignItems: 'center'
+        }}>
+        <View>
+          <Image
+            style={{height: 40, width: 40, borderRadius: 20}}
+            source={require('../../../../assets/imgs/german-shepard.jpg')}/>
+          <Text style={{marginLeft: 12, fontSize: 16}}>{name}</Text>
+          <Text style={{marginLeft: 12, fontSize: 16}}>{breed}</Text>
+          <Text style={{marginLeft: 12, fontSize: 16}}>{age}</Text>
+        </View>
+      </TouchableHighlight>
+    );
+  }
+
   render() {
     const {
       nameForm,
@@ -84,12 +109,11 @@ export default class DogEdit extends Component {
             initialListSize={4}
             enableEmptySections={true}
             dataSource={dogsDataSource}
-            renderRow={dog =>
-              <DogItem
-                clickAction={this.editDog}
-                name={dog.details.name}
-                breed={dog.details.breed}
-                age={dog.details.age} />} />
+            renderRow={dog => this.DogItem(
+              dog.details.name,
+              dog.details.breed,
+              dog.details.age,
+              dog.key)} />
           : <View style={{ flex: 1, flexDirection: 'column' }}>
               <ActivityIndicator size="large" color="purple" />
               <Text style={{ fontSize: 20 }}>Ainda não há nenhum cachorro cadastrado.</Text>
@@ -127,23 +151,3 @@ export default class DogEdit extends Component {
   }
 }
 
-function DogItem(props) {
-  return (
-    <TouchableHighlight
-      onPress={props.clickAction}
-      style={{
-      flex: 1,
-      padding: 12,
-      flexDirection: 'row',
-      alignItems: 'center' }}>
-      <View>
-        <Image
-          style={{ height: 40, width: 40, borderRadius: 20 }}
-          source={require('../../../../assets/imgs/german-shepard.jpg')} />
-        <Text style={{ marginLeft: 12, fontSize: 16 }}>{props.name}</Text>
-        <Text style={{ marginLeft: 12, fontSize: 16 }}>{props.breed}</Text>
-        <Text style={{ marginLeft: 12, fontSize: 16 }}>{props.age}</Text>
-      </View>
-    </TouchableHighlight>
-  );
-}

@@ -40,10 +40,24 @@ export default class Database {
     firebase.database().ref(userDogsPath).on('value', snapshot => {
       let dogs = [];
 
-      if (snapshot.val()) { dogs = snapshot.val(); console.log('SNAPSHOT', snapshot.val()); }
+      if (snapshot.val()) { dogs = snapshot.val(); }
 
-      console.log('SNAPSHOT OBJECT ARRAY', Object.keys(dogs).map(key => dogs[key]));
       callback(Object.keys(dogs).map(key => dogs[key]));
+    });
+  }
+
+  static deleteUserDog(dogId, userId, callback) {
+    let userDogsPath = "/user/" + userId + "/dogs";
+
+    firebase.database().ref(userDogsPath).once('value', snapshot => {
+      const rawDogs = snapshot.val();
+      const dogs = Object.keys(rawDogs).map(key => rawDogs[key]);
+      dogs.forEach((dog, index) => {
+        if (dog.id === dogId) {
+          userDogsPath = "/user/" + userId + "/dogs/" + Object.keys(rawDogs)[index];
+          return firebase.database().ref(userDogsPath).remove().then(callback);
+        }
+      });
     });
   }
 
@@ -66,14 +80,14 @@ export default class Database {
     }).then(data => callback(data.key));
   }
 
-  static setDogDetails(dogId, name, breed, age) {
+  static setDogDetails(dogId, name, breed, age, callback) {
     let dogDetailsPath = "/dog/" + dogId + "/details";
 
     firebase.database().ref(dogDetailsPath).set({
       name: name,
       breed: breed,
       age: age
-    });
+    }).then(callback);
   }
 
   static listenDogDetails(dogId, callback) {

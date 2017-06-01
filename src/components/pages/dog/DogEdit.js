@@ -13,13 +13,14 @@ export default class DogEdit extends Component {
     super(props);
 
     this.state = {
-      dogId: this.props.dogId,
-      name: '',
-      nameForm: '',
-      breed: '',
-      breedForm: '',
-      age: '',
-      ageForm: '',
+      uid: this.props.navigation.state.params.uid,
+      dogId: this.props.navigation.state.params.dogId,
+      name: this.props.navigation.state.params.name,
+      nameForm: this.props.navigation.state.params.name,
+      breed: this.props.navigation.state.params.breed,
+      breedForm: this.props.navigation.state.params.breed,
+      age: this.props.navigation.state.params.age,
+      ageForm: this.props.navigation.state.params.age,
       response: '',
     };
 
@@ -52,14 +53,22 @@ export default class DogEdit extends Component {
     const { dogId, nameForm, breedForm, ageForm } = this.state;
 
     if (dogId && nameForm && breedForm && ageForm) {
-      Database.setDogDetails(dogId, nameForm, breedForm, ageForm);
+      Database.setDogDetails(dogId, nameForm, breedForm, ageForm, () => {
+        alert('Animal atualizado com sucesso!');
+        this.props.navigation.navigate('DogsList');
+      });
     } else { this.setState({ response: 'Por favor, preencha todos os campos.' }); }
   }
 
   deleteData() {
-    Database.deleteDog(this.state.dogId);
-    alert('Item deletado com sucesso!');
-    this.props.navigation.navigate('DogsList');
+    const { dogId, uid } = this.state;
+
+    Database.deleteDog(dogId, () => {
+      Database.deleteUserDog(dogId, uid, () => {
+        alert('Animal deletado com sucesso!');
+        this.props.navigation.navigate('DogsList');
+      });
+    });
   }
 
   render() {
