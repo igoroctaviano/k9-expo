@@ -59,7 +59,10 @@ export default class Edit extends Component {
         uid,
         nameForm,
         mobileForm,
-        addressForm, () => alert('Dados atualizados com sucesso!')
+        addressForm, () => {
+          alert('Dados atualizados com sucesso!');
+          this.props.navigation.navigate('Home');
+        }
       );
     } else { this.setState({ response: 'Por favor, preencha todos os campos.' }); }
   }

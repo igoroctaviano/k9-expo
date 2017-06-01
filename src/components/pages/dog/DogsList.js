@@ -94,6 +94,7 @@ export default class DogEdit extends Component {
 
   render() {
     const {
+      dogs,
       nameForm,
       breedForm,
       ageForm,
@@ -104,7 +105,7 @@ export default class DogEdit extends Component {
 
     return (
       <Wrapper>
-        { dogsDataSource ?
+        { dogsDataSource.getRowCount() > 0 ?
           <ListView
             initialListSize={4}
             enableEmptySections={true}
@@ -115,7 +116,7 @@ export default class DogEdit extends Component {
               dog.details.age,
               dog.key)} />
           : <View style={{ flex: 1, flexDirection: 'column' }}>
-              <ActivityIndicator size="large" color="purple" />
+            { !dogs ? <ActivityIndicator size="large" color="purple" /> : null }
               <Text style={{ fontSize: 20 }}>Ainda não há nenhum cachorro cadastrado.</Text>
             </View>
         }
