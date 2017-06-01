@@ -23,16 +23,18 @@ export default class Signin extends Component {
   }
 
   async signin() {
-    const { email, password } = this.state;
+    const {email, password} = this.state;
 
-    try {
-      this.setState({ loading: true });
-      await firebase.auth().signInWithEmailAndPassword(email, password)
-      .then(() => {
-        this.setState({ loading: false });
-        this.props.navigation.navigate('Home');
-      });
-    } catch (error) { this.setState({ response: error.toString() }); }
+    if (email && password) {
+      try {
+        this.setState({ loading: true });
+        await firebase.auth().signInWithEmailAndPassword(email, password)
+        .then(() => {
+          this.setState({ loading: false });
+          this.props.navigation.navigate('Home');
+        });
+      } catch (error) { this.setState({ response: error.toString() }); }
+    } else { this.setState({ response: 'Ops! preencha todos os campos!' }); }
   }
 
   render() {

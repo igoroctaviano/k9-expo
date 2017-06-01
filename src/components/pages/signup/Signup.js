@@ -39,7 +39,7 @@ export default class Signup extends Component {
           this.props.navigation.navigate('Home');
         });
       } catch (error) { this.setState({ response: error.toString() }); }
-    } else { this.setState({ response: 'Por favor, preencha todos os campos.' }); }
+    } else { this.setState({ response: 'Ops! preencha todos os campos!' }); }
   }
 
   render() {

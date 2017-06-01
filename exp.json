@@ -17,5 +17,8 @@
   },
   "ios": {
     "supportsTablet": true
+  },
+  "android" : { 
+    "package": "com.igoroctaviano.k9" 
   }
 }
